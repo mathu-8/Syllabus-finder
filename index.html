@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>StudySync - Syllabus Tracker</title>
+
+<style>
+
+/* ================= GENERAL ================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f4f6;
+    color: #222;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    max-width: 500px;
+    margin: auto;
+    padding: 25px;
+}
+
+.active {
+    display: block;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    margin: 20px 0;
+}
+
+h3 {
+    margin-bottom: 10px;
+}
+
+
+/* ================= LOGIN ================= */
+
+.login-title {
+    margin-top: 70px;
+    font-size: 38px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin: 10px 0 35px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+
+/* ================= BUTTONS ================= */
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3730a3;
+}
+
+.back {
+    background: #6b7280;
+}
+
+.logout {
+    background: #dc2626;
+}
+
+
+/* ================= PROGRESS ================= */
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #4f46e5;
+    border-radius: 10px;
+}
+
+
+/* ================= SUBJECT ================= */
+
+.subject-card {
+    background: white;
+    padding: 18px;
+    margin: 12px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.subject-title {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.subject-progress {
+    color: #555;
+    font-size: 14px;
+    margin-top: 7px;
+}
+
+
+/* ================= SYLLABUS ================= */
+
+.topic {
+    padding: 14px;
+    margin: 8px 0;
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+.topic label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.topic input {
+    width: 18px;
+    height: 18px;
+}
+
+
+/* ================= GROUP ================= */
+
+.member {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.rank {
+    font-weight: bold;
+}
+
+
+/* ================= SUCCESS ================= */
+
+.success {
+    text-align: center;
+    margin-top: 90px;
+}
+
+.success-icon {
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.points {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 25px 0;
+}
+
+
+/* ================= NAVIGATION ================= */
+
+.nav-buttons {
+    margin-top: 20px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================= -->
+<!-- LOGIN SCREEN -->
+<!-- ================================================= -->
+
+<section id="login" class="screen active">
+
+<h1 class="login-title">
+StudySync
+</h1>
+
+<p class="subtitle">
+Collaborative Real-Time Syllabus Tracker
+</p>
+
+<div class="card">
+
+<input
+type="text"
+id="studentId"
+placeholder="Student ID / Email">
+
+<input
+type="password"
+id="password"
+placeholder="Password">
+
+<button onclick="login()">
+LOGIN
+</button>
+
+</div>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- DASHBOARD -->
+<!-- ================================================= -->
+
+<section id="dashboard" class="screen">
+
+<h2>
+Welcome, Student 👋
+</h2>
+
+
+<!-- OVERALL PROGRESS -->
+
+<div class="card">
+
+<h3>
+Overall Syllabus Progress
+</h3>
+
+<h1 id="overallProgress">
+0%
+</h1>
+
+<div class="progress-container">
+
+<div
+id="overallBar"
+class="progress">
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- SUBJECTS -->
+
+<h2>
+📚 My Subjects
+</h2>
+
+
+<!-- JAVA -->
+
+<div class="subject-card">
+
+<div class="subject-title">
+☕ Java Programming
+</div>
+
+<div class="subject-progress">
+
+Progress:
+<span id="javaPercent">
+0%
+</span>
+
+</div>
+
+<div class="progress-container">
+
+<div
+id="javaBar"
+class="progress">
+</div>
+
+</div>
+
+<button onclick="openSubject('java')">
+View Java Syllabus
+</button>
+
+</div>
+
+
+
+<!-- DATA STRUCTURES -->
+
+<div class="subject-card">
+
+<div class="subject-title">
+🌳 Data Structures
+</div>
+
+<div class="subject-progress">
+
+Progress:
+<span id="dsPercent">
+0%
+</span>
+
+</div>
+
+<div class="progress-container">
+
+<div
+id="dsBar"
+class="progress">
+</div>
+
+</div>
+
+<button onclick="openSubject('ds')">
+View Data Structures
+</button>
+
+</div>
+
+
+
+<!-- DESIGN THINKING -->
+
+<div class="subject-card">
+
+<div class="subject-title">
+💡 Design Thinking
+</div>
+
+<div class="subject-progress">
+
+Progress:
+<span id="dtPercent">
+0%
+</span>
+
+</div>
+
+<div class="progress-container">
+
+<div
+id="dtBar"
+class="progress">
+</div>
+
+</div>
+
+<button onclick="openSubject('dt')">
+View Design Thinking
+</button>
+
+</div>
+
+
+
+<!-- ALGEBRA -->
+
+<div class="subject-card">
+
+<div class="subject-title">
+🔢 Algebra and Number Theory
+</div>
+
+<div class="subject-progress">
+
+Progress:
+<span id="antPercent">
+0%
+</span>
+
+</div>
+
+<div class="progress-container">
+
+<div
+id="antBar"
+class="progress">
+</div>
+
+</div>
+
+<button onclick="openSubject('ant')">
+View Algebra & Number Theory
+</button>
+
+</div>
+
+
+
+<!-- DPCO -->
+
+<div class="subject-card">
+
+<div class="subject-title">
+💻 Digital Principles and Computer Organization
+</div>
+
+<div class="subject-progress">
+
+Progress:
+<span id="dpcoPercent">
+0%
+</span>
+
+</div>
+
+<div class="progress-container">
+
+<div
+id="dpcoBar"
+class="progress">
+</div>
+
+</div>
+
+<button onclick="openSubject('dpco')">
+View DPCO
+</button>
+
+</div>
+
+
+
+<!-- EXAM -->
+
+<div class="card">
+
+<h3>
+📅 Upcoming Examination
+</h3>
+
+<p>
+University Examination
+</p>
+
+<h2>
+20 Days Left
+</h2>
+
+</div>
+
+
+
+<button onclick="showScreen('group')">
+👥 Study Group & Leaderboard
+</button>
+
+
+<button
+class="logout"
+onclick="showScreen('login')">
+
+Logout
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- JAVA SYLLABUS -->
+<!-- ================================================= -->
+
+<section id="java" class="screen">
+
+<h2>
+☕ Java Programming
+</h2>
+
+<div class="card">
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="javaTopic"
+onchange="calculateSubject('java')">
+Unit 1 – Introduction to Java & Basics
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="javaTopic"
+onchange="calculateSubject('java')">
+Unit 2 – Classes, Objects & Constructors
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="javaTopic"
+onchange="calculateSubject('java')">
+Unit 3 – Inheritance, Polymorphism & Interfaces
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="javaTopic"
+onchange="calculateSubject('java')">
+Unit 4 – Exception Handling & File Handling
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="javaTopic"
+onchange="calculateSubject('java')">
+Unit 5 – Multithreading & Collections
+</label>
+</div>
+
+
+<h3>
+Progress:
+<span id="javaSubjectProgress">
+0%
+</span>
+</h3>
+
+<div class="progress-container">
+
+<div
+id="javaSubjectBar"
+class="progress">
+</div>
+
+</div>
+
+
+<button onclick="saveSubject('java')">
+💾 Save Java Progress
+</button>
+
+</div>
+
+
+<button
+class="back"
+onclick="showScreen('dashboard')">
+
+← Dashboard
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- DATA STRUCTURES -->
+<!-- ================================================= -->
+
+<section id="ds" class="screen">
+
+<h2>
+🌳 Data Structures
+</h2>
+
+<div class="card">
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dsTopic"
+onchange="calculateSubject('ds')">
+Unit 1 – Arrays and Linked Lists
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dsTopic"
+onchange="calculateSubject('ds')">
+Unit 2 – Stacks and Queues
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dsTopic"
+onchange="calculateSubject('ds')">
+Unit 3 – Trees and Binary Search Trees
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dsTopic"
+onchange="calculateSubject('ds')">
+Unit 4 – Graphs and Graph Traversal
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dsTopic"
+onchange="calculateSubject('ds')">
+Unit 5 – Sorting and Searching
+</label>
+</div>
+
+
+<h3>
+Progress:
+<span id="dsSubjectProgress">
+0%
+</span>
+</h3>
+
+<div class="progress-container">
+
+<div
+id="dsSubjectBar"
+class="progress">
+</div>
+
+</div>
+
+
+<button onclick="saveSubject('ds')">
+💾 Save Data Structures Progress
+</button>
+
+</div>
+
+
+<button
+class="back"
+onclick="showScreen('dashboard')">
+
+← Dashboard
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- DESIGN THINKING -->
+<!-- ================================================= -->
+
+<section id="dt" class="screen">
+
+<h2>
+💡 Design Thinking
+</h2>
+
+<div class="card">
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dtTopic"
+onchange="calculateSubject('dt')">
+Unit 1 – Introduction to Design Thinking
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dtTopic"
+onchange="calculateSubject('dt')">
+Unit 2 – Empathize – User Research & Empathy Maps
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dtTopic"
+onchange="calculateSubject('dt')">
+Unit 3 – Define – Problem Statements & HMW
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dtTopic"
+onchange="calculateSubject('dt')">
+Unit 4 – Ideate and Prototype
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dtTopic"
+onchange="calculateSubject('dt')">
+Unit 5 – Test, Feedback & Iteration
+</label>
+</div>
+
+
+<h3>
+Progress:
+<span id="dtSubjectProgress">
+0%
+</span>
+</h3>
+
+<div class="progress-container">
+
+<div
+id="dtSubjectBar"
+class="progress">
+</div>
+
+</div>
+
+
+<button onclick="saveSubject('dt')">
+💾 Save Design Thinking Progress
+</button>
+
+</div>
+
+
+<button
+class="back"
+onclick="showScreen('dashboard')">
+
+← Dashboard
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- ALGEBRA AND NUMBER THEORY -->
+<!-- ================================================= -->
+
+<section id="ant" class="screen">
+
+<h2>
+🔢 Algebra and Number Theory
+</h2>
+
+<div class="card">
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="antTopic"
+onchange="calculateSubject('ant')">
+Unit 1 – Sets, Relations & Functions
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="antTopic"
+onchange="calculateSubject('ant')">
+Unit 2 – Groups & Subgroups
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="antTopic"
+onchange="calculateSubject('ant')">
+Unit 3 – Rings & Fields
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="antTopic"
+onchange="calculateSubject('ant')">
+Unit 4 – Divisibility, GCD & Prime Numbers
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="antTopic"
+onchange="calculateSubject('ant')">
+Unit 5 – Congruences & Chinese Remainder Theorem
+</label>
+</div>
+
+
+<h3>
+Progress:
+<span id="antSubjectProgress">
+0%
+</span>
+</h3>
+
+<div class="progress-container">
+
+<div
+id="antSubjectBar"
+class="progress">
+</div>
+
+</div>
+
+
+<button onclick="saveSubject('ant')">
+💾 Save Algebra Progress
+</button>
+
+</div>
+
+
+<button
+class="back"
+onclick="showScreen('dashboard')">
+
+← Dashboard
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- DPCO -->
+<!-- ================================================= -->
+
+<section id="dpco" class="screen">
+
+<h2>
+💻 Digital Principles & Computer Organization
+</h2>
+
+<div class="card">
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dpcoTopic"
+onchange="calculateSubject('dpco')">
+Unit 1 – Number Systems & Boolean Algebra
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dpcoTopic"
+onchange="calculateSubject('dpco')">
+Unit 2 – Logic Gates & Combinational Circuits
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dpcoTopic"
+onchange="calculateSubject('dpco')">
+Unit 3 – Sequential Circuits & Registers
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dpcoTopic"
+onchange="calculateSubject('dpco')">
+Unit 4 – Computer Organization & CPU
+</label>
+</div>
+
+
+<div class="topic">
+<label>
+<input
+type="checkbox"
+class="dpcoTopic"
+onchange="calculateSubject('dpco')">
+Unit 5 – Memory, Bus & I/O Organization
+</label>
+</div>
+
+
+<h3>
+Progress:
+<span id="dpcoSubjectProgress">
+0%
+</span>
+</h3>
+
+<div class="progress-container">
+
+<div
+id="dpcoSubjectBar"
+class="progress">
+</div>
+
+</div>
+
+
+<button onclick="saveSubject('dpco')">
+💾 Save DPCO Progress
+</button>
+
+</div>
+
+
+<button
+class="back"
+onclick="showScreen('dashboard')">
+
+← Dashboard
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- GROUP PROGRESS -->
+<!-- ================================================= -->
+
+<section id="group" class="screen">
+
+<h2>
+🏆 Study Group
+</h2>
+
+
+<div class="card">
+
+<h3>
+Overall Group Progress
+</h3>
+
+<h1 id="groupProgress">
+0%
+</h1>
+
+<div class="progress-container">
+
+<div
+id="groupBar"
+class="progress">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Leaderboard
+</h3>
+
+
+<div class="member">
+
+<span>
+🥇 Ananya
+</span>
+
+<span>
+85%
+</span>
+
+</div>
+
+
+<div class="member">
+
+<span>
+🥈 Priya
+</span>
+
+<span>
+78%
+</span>
+
+</div>
+
+
+<div class="member">
+
+<span>
+🥉 You
+</span>
+
+<span id="yourRank">
+0%
+</span>
+
+</div>
+
+
+<div class="member">
+
+<span>
+4. Rahul
+</span>
+
+<span>
+55%
+</span>
+
+</div>
+
+</div>
+
+
+<button onclick="showScreen('success')">
+🏆 View Achievement
+</button>
+
+
+<button
+class="back"
+onclick="showScreen('dashboard')">
+
+← Dashboard
+
+</button>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- SUCCESS -->
+<!-- ================================================= -->
+
+<section id="success" class="screen">
+
+<div class="success">
+
+<div class="success-icon">
+🎉
+</div>
+
+<h1>
+Great Work!
+</h1>
+
+<p style="margin-top:20px;">
+Your syllabus progress has been saved.
+</p>
+
+
+<h1 id="successProgress"
+style="margin-top:20px;">
+0%
+</h1>
+
+
+<div class="points">
+⭐ +10 Points
+</div>
+
+
+<div class="card">
+
+<h3>
+🔥 Study Streak
+</h3>
+
+<p>
+5 Days
+</p>
+
+</div>
+
+
+<button onclick="showScreen('dashboard')">
+Back to Dashboard
+</button>
+
+</div>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ================================================= -->
+
+<script>
+
+
+/* ================= SUBJECT LIST ================= */
+
+const subjects = [
+    "java",
+    "ds",
+    "dt",
+    "ant",
+    "dpco"
+];
+
+
+/* ================= LOGIN ================= */
+
+function login() {
+
+    let id =
+    document.getElementById("studentId").value;
+
+    if(id.trim() === "") {
+
+        alert("Please enter your Student ID.");
+
+        return;
+    }
+
+    showScreen("dashboard");
+
+}
+
+
+/* ================= SCREEN CHANGE ================= */
+
+function showScreen(screenId) {
+
+    let screens =
+    document.querySelectorAll(".screen");
+
+    screens.forEach(function(screen) {
+
+        screen.classList.remove("active");
+
+    });
+
+    document
+    .getElementById(screenId)
+    .classList.add("active");
+
+    updateDashboard();
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* ================= OPEN SUBJECT ================= */
+
+function openSubject(subject) {
+
+    showScreen(subject);
+
+}
+
+
+/* ================= CALCULATE SUBJECT ================= */
+
+function calculateSubject(subject) {
+
+    let topics =
+    document.querySelectorAll(
+        "." + subject + "Topic"
+    );
+
+    let completed = 0;
+
+    topics.forEach(function(topic) {
+
+        if(topic.checked) {
+
+            completed++;
+
+        }
+
+    });
+
+    let percentage =
+    Math.round(
+        (completed / topics.length) * 100
+    );
+
+
+    document.getElementById(
+        subject + "SubjectProgress"
+    ).innerText =
+    percentage + "%";
+
+
+    document.getElementById(
+        subject + "SubjectBar"
+    ).style.width =
+    percentage + "%";
+
+
+    return percentage;
+
+}
+
+
+/* ================= SAVE SUBJECT ================= */
+
+function saveSubject(subject) {
+
+    let topics =
+    document.querySelectorAll(
+        "." + subject + "Topic"
+    );
+
+    let status = [];
+
+    topics.forEach(function(topic) {
+
+        status.push(topic.checked);
+
+    });
+
+
+    localStorage.setItem(
+        subject + "Topics",
+        JSON.stringify(status)
+    );
+
+
+    let percentage =
+    calculateSubject(subject);
+
+
+    localStorage.setItem(
+        subject + "Progress",
+        percentage
+    );
+
+
+    updateDashboard();
+
+
+    alert(
+        "Progress saved successfully! 🎉"
+    );
+
+}
+
+
+/* ================= LOAD SUBJECT ================= */
+
+function loadSubject(subject) {
+
+    let saved =
+    localStorage.getItem(
+        subject + "Topics"
+    );
+
+
+    if(saved) {
+
+        let status =
+        JSON.parse(saved);
+
+        let topics =
+        document.querySelectorAll(
+            "." + subject + "Topic"
+        );
+
+
+        topics.forEach(function(topic,index) {
+
+            topic.checked =
+            status[index] || false;
+
+        });
+
+    }
+
+
+    calculateSubject(subject);
+
+}
+
+
+/* ================= OVERALL PROGRESS ================= */
+
+function getOverallProgress() {
+
+    let total = 0;
+
+    subjects.forEach(function(subject) {
+
+        let saved =
+        localStorage.getItem(
+            subject + "Progress"
+        );
+
+        if(saved) {
+
+            total += parseInt(saved);
+
+        }
+
+    });
+
+
+    return Math.round(
+        total / subjects.length
+    );
+
+}
+
+
+/* ================= UPDATE DASHBOARD ================= */
+
+function updateDashboard() {
+
+    subjects.forEach(function(subject) {
+
+        let saved =
+        localStorage.getItem(
+            subject + "Progress"
+        );
+
+
+        let percentage =
+        saved ? parseInt(saved) : 0;
+
+
+        let percentElement =
+        document.getElementById(
+            subject + "Percent"
+        );
+
+
+        let barElement =
+        document.getElementById(
+            subject + "Bar"
+        );
+
+
+        if(percentElement) {
+
+            percentElement.innerText =
+            percentage + "%";
+
+        }
+
+
+        if(barElement) {
+
+            barElement.style.width =
+            percentage + "%";
+
+        }
+
+    });
+
+
+    let overall =
+    getOverallProgress();
+
+
+    document.getElementById(
+        "overallProgress"
+    ).innerText =
+    overall + "%";
+
+
+    document.getElementById(
+        "overallBar"
+    ).style.width =
+    overall + "%";
+
+
+    document.getElementById(
+        "groupProgress"
+    ).innerText =
+    overall + "%";
+
+
+    document.getElementById(
+        "groupBar"
+    ).style.width =
+    overall + "%";
+
+
+    document.getElementById(
+        "yourRank"
+    ).innerText =
+    overall + "%";
+
+
+    document.getElementById(
+        "successProgress"
+    ).innerText =
+    overall + "%";
+
+}
+
+
+/* ================= LOAD EVERYTHING ================= */
+
+function loadAll() {
+
+    subjects.forEach(function(subject) {
+
+        loadSubject(subject);
+
+    });
+
+    updateDashboard();
+
+}
+
+
+/* ================= START ================= */
+
+window.onload = function() {
+
+    loadAll();
+
+};
+
+</script>
+
+</body>
+</html>
